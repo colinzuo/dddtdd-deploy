@@ -1,0 +1,15 @@
+all:
+  hosts:
+    proxy:
+      ansible_host: 127.0.0.1
+      ansible_connection: local
+      ip: 127.0.0.1
+      access_ip: 127.0.0.1
+  children:
+    dddtdd-node:
+      hosts:
+        proxy:
+    env-current:
+      ansible_group_priority: 10
+      hosts:
+        proxy:

@@ -1,0 +1,53 @@
+env_current: "not_set"
+
+#===========================tools================================
+dddtdd_tools_name_space: "dddtdd-tools-{{ cluster_suffix }}" # namespace name for dddtdd tools.
+dddtdd_tools_reset: false # true or false, if it is true, delete all old deployments when execute update or upgrade.
+dddtdd_tools_deletens: "{{ dddtdd_tools_reset }}" # delete namespace when execute update or upgrade.
+dddtdd_tools_remove_old: "{{ dddtdd_tools_reset }}" # delete the old deploy dir in kubectl node when execute update or upgrade.
+dddtdd_tools_delete_old_deployment: true # delete the old deploy when execute update or upgrade.
+dddtdd_tools_kafka: true
+dddtdd_tools_nats: true
+dddtdd_tools_prometheus: false
+dddtdd_tools_grafana: false
+dddtdd_tools_nginx: true
+dddtdd_tools_mongodb: false
+dddtdd_tools_zookeeper: false
+dddtdd_elk_env: "*"
+#dddtdd_elk_elasticsearch_minimum_master_nodes: 1
+use_elk_v7: true
+enable_elk_backup: false
+elk_backup_path: "/mnt1/share"
+elk_backup_server: "172.16.23.5"
+elasticsearch_cluster_name: multi
+elasticsearch_master_java_opts: "-Xmx1g -Xms1g"
+elasticsearch_master_memory_limit: "4Gi"
+elasticsearch_master_memory_request: "2Gi"
+elasticsearch_master_replicas: 3
+elasticsearch_master_hostpath: true
+elasticsearch_master_storage: 10Gi
+elasticsearch_master_nodes: "{{ run_elasticsearch_master_nodes }}"
+elasticsearch_data_java_opts: "-Xmx1g -Xms1g"
+elasticsearch_data_memory_limit: "4Gi"
+elasticsearch_data_memory_request: "2Gi"
+elasticsearch_data_replicas: 3
+elasticsearch_data_hostpath: true
+elasticsearch_data_storage: 30Gi
+elasticsearch_data_nodes: "{{ run_elasticsearch_data_nodes }}"
+logstash_java_opts: "-Xmx1g -Xms1g"
+logstash_replicas: 2
+logstash_data_hostpath: true
+logstash_nodes: "{{ run_logstash_nodes }}"
+logstash_data_storage: 2Gi
+kibana_replicas: 1
+kibana_memory_limit: "1Gi"
+kibana_memory_request: "500m"
+
+#===========================tools nodeport================================
+dddtdd_nginx_80_node_port: "{{ cluster_node_port_base + 104 }}"
+
+#===========================elk nodeport================================
+dddtdd_elk_kibana_5601_node_port: "{{ cluster_node_port_base + 105 }}"
+dddtdd_elk_elasticsearch_9200_node_port: "{{ cluster_node_port_base + 106 }}"
+dddtdd_elk_elasticsearch_9300_node_port: "{{ cluster_node_port_base + 107 }}"
+dddtdd_elk_logstash_5044_node_port: "{{ cluster_node_port_base + 108 }}"

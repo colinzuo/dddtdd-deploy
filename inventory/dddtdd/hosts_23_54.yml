@@ -1,0 +1,16 @@
+all:
+  hosts:
+    node-23-54:
+      ansible_host: 172.16.23.54
+      ip: 172.16.23.54
+      access_ip: 172.16.23.54
+      ansible_user: root
+  children:
+    dddtdd-node:
+      hosts:
+        node-23-54:
+    env-current:
+      vars:
+        ansible_group_priority: 10
+      hosts:
+        node-23-54:

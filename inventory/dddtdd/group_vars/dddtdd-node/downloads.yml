@@ -1,0 +1,6 @@
+kubectl_enabled: true
+helm_enabled: true
+kafka_enabled: false
+nginx_enabled: false
+zookeeper_enabled: false
+mongodb_enabled: false

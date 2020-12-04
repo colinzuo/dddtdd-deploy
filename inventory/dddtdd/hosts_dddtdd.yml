@@ -1,0 +1,30 @@
+all:
+  hosts:
+    node-35-240:
+      ansible_host: 10.11.35.240
+      ip: 10.11.35.240
+      access_ip: 10.11.35.240
+      ansible_user: root
+    node-23-70:
+      ansible_host: 172.16.23.70
+      ip: 172.16.23.70
+      access_ip: 172.16.23.70
+      ansible_user: root
+    node-23-54:
+      ansible_host: 172.16.23.54
+      ip: 172.16.23.54
+      access_ip: 172.16.23.54
+      ansible_user: root
+  children:
+    dddtdd-node:
+      hosts:
+        node-35-240:
+        node-23-54:
+        node-23-70:
+    env-current:
+      vars:
+        ansible_group_priority: 10
+      hosts:
+        node-35-240:
+        node-23-54:
+        node-23-70:

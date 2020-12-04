@@ -1,0 +1,6 @@
+
+download_run_once: true
+download_localhost: true
+
+#===========================nodeport================================
+cluster_node_port_base: 32500
