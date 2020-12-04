@@ -1,0 +1,82 @@
+---
+# Use proxycommand if bastion host is in group all
+# This change obseletes editing ansible.cfg file depending on bastion existence
+ansible_ssh_common_args: "{% if 'bastion' in groups['all'] %} -o ProxyCommand='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -W %h:%p {{ hostvars['bastion']['ansible_user'] }}@{{ hostvars['bastion']['ansible_host'] }} {% if ansible_ssh_private_key_file is defined %}-i {{ ansible_ssh_private_key_file }}{% endif %} ' {% endif %}"
+
+# optional disable the swap
+disable_swap: true
+
+# Set to true to allow pre-checks to fail and continue deployment
+ignore_assert_errors: false
+
+# nginx-proxy configure
+nginx_config_dir: "/etc/nginx"
+
+# haproxy configure
+haproxy_config_dir: "/etc/haproxy"
+
+# Directory where the binaries will be installed
+bin_dir: /usr/local/bin
+docker_bin_dir: /usr/bin
+# Where the binaries will be downloaded.
+# Note: ensure that you've enough disk space (about 1G)
+local_release_dir: "/tmp/releases"
+# Random shifts for retrying failed ops like pushing/downloading
+retry_stagger: 5
+
+# Container for runtime
+container_manager: docker
+
+# Container on localhost (download images when download_localhost is true)
+container_manager_on_localhost: "{{ container_manager }}"
+
+## Uncomment this if you have more than 3 nameservers, then we'll only use the first 3.
+docker_dns_servers_strict: false
+
+# Path used to store Docker data
+docker_daemon_graph: "/var/lib/docker"
+
+## Used to set docker daemon iptables options to true
+docker_iptables_enabled: "false"
+
+# Docker log options
+# Rotate container stderr/stdout logs at 50m and keep last 5
+docker_log_opts: "--log-opt max-size=50m --log-opt max-file=5"
+
+## A list of insecure docker registries (IP address or domain name), for example
+## to allow insecure-registry access to self-hosted registries. Empty by default.
+# docker_insecure_registries:
+#   - mirror.registry.io
+#   - 172.19.16.11
+docker_insecure_registries: []
+
+## A list of additional registry mirrors, for example China registry mirror. Empty by default.
+docker_registry_mirrors:
+   - https://registry.docker-cn.com
+   - https://mirror.aliyuncs.com
+#docker_registry_mirrors: []
+
+## If non-empty will override default system MounFlags value.
+## This option takes a mount propagation flag: shared, slave
+## or private, which control whether mounts in the file system
+## namespace set up for docker will receive or propagate mounts
+## and unmounts. Leave empty for system default
+# docker_mount_flags:
+
+## A string of extra options to pass to the docker daemon.
+# docker_options: ""
+
+## A list of plugins to install using 'docker plugin install --grant-all-permissions'
+## Empty by default so no plugins will be installed.
+docker_plugins: []
+
+_host_architecture_groups:
+  x86_64: amd64
+  aarch64: arm64
+  armv7l: arm
+host_architecture: >-
+  {%- if ansible_architecture in _host_architecture_groups -%}
+  {{ _host_architecture_groups[ansible_architecture] }}
+  {%- else -%}
+  {{ ansible_architecture }}
+  {%- endif -%}

@@ -1,0 +1,27 @@
+---
+# Disable swap
+- import_tasks: 0010-swapoff.yml
+  when:
+    - disable_swap
+
+- import_tasks: 0020-verify-settings.yml
+  tags:
+    - asserts
+
+- import_tasks: 0040-set_facts.yml
+  tags:
+    - facts
+
+- import_tasks: 0050-create_directories.yml
+
+- import_tasks: 0070-system-packages.yml
+  tags:
+    - bootstrap-os
+
+- import_tasks: 0080-system-configurations.yml
+  tags:
+    - bootstrap-os
+
+# We need to make sure the network is restarted early enough so that docker can later pick up the correct system
+# nameservers and search domains
+- meta: flush_handlers

@@ -1,0 +1,20 @@
+---
+- name: Update package management cache (APT)
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+  when: ansible_os_family == "Debian"
+  tags:
+    - bootstrap-os
+
+- name: Install packages requirements
+  action:
+    module: "{{ ansible_pkg_mgr }}"
+    name: "{{ required_pkgs | default([]) | union(common_required_pkgs|default([])) }}"
+    state: latest
+  register: pkgs_task_result
+  until: pkgs_task_result is succeeded
+  retries: "{{ pkg_install_retries }}"
+  delay: "{{ retry_stagger | random + 3 }}"
+  tags:
+    - bootstrap-os

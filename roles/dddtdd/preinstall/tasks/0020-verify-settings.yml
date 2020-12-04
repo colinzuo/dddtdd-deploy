@@ -1,0 +1,63 @@
+---
+- name: Stop if dddtdd group is empty
+  assert:
+    that: "groups.get('{{ item }}')"
+  with_items:
+    - dddtdd-node
+  run_once: true
+  when: not ignore_assert_errors
+
+- name: Stop if non systemd OS type
+  assert:
+    that: ansible_service_mgr == "systemd"
+  when: not ignore_assert_errors
+
+- name: Stop if unknown OS
+  assert:
+    that: ansible_os_family in ['Ubuntu', 'Debian']
+    msg: "{{ ansible_os_family }} is not a known OS"
+  when: not ignore_assert_errors
+
+# simplify this items-list when   https://github.com/ansible/ansible/issues/15753  is resolved
+- name: "Stop if known booleans are set as strings (Use JSON format on CLI: -e \"{'key': true }\")"
+  assert:
+    that: item.value|type_debug == 'bool'
+    msg: "{{ item.value }} isn't a bool"
+  run_once: yes
+  with_items:
+    - { name: download_run_once, value: "{{ download_run_once }}" }
+    - { name: download_always_pull, value: "{{ download_always_pull }}" }
+    - { name: helm_enabled, value: "{{ helm_enabled }}" }
+  when: not ignore_assert_errors
+
+- name: Stop if ip var does not match local ips
+  assert:
+    that: ip in ansible_all_ipv4_addresses
+    msg: "'{{ ansible_all_ipv4_addresses }}' do not contain '{{ ip }}'"
+  when:
+    - not ignore_assert_errors
+    - ip is defined
+
+- name: Stop if access_ip is not pingable
+  command: ping -c1 {{ access_ip }}
+  when:
+    - access_ip is defined
+    - not ignore_assert_errors
+
+- name: Stop if bad hostname
+  assert:
+    that: inventory_hostname is match("[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$")
+    msg: "Hostname must consist of lower case alphanumeric characters, '.' or '-', and must start and end with an alphanumeric character"
+  when: not ignore_assert_errors
+
+- name: Stop if download_localhost is enabled but download_run_once is not
+  assert:
+    that: download_run_once
+    msg: "download_localhost requires enable download_run_once"
+  when: download_localhost
+
+- name: Stop if download_localhost is enabled when container_manager not docker
+  assert:
+    that: container_manager == 'docker'
+    msg: "download_run_once support only for docker. See https://github.com/containerd/containerd/issues/4075 for details"
+  when: download_run_once or download_force_cache

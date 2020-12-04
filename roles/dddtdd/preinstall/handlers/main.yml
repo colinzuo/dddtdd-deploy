@@ -1,0 +1,7 @@
+---
+# 原本kubespray有修改dns配置，所以需要重启systemd-resolved，
+# 这里实际不需要，保留这个只是作为一个配置完重启某些service的例子
+- name: Preinstall | Restart systemd-resolved
+  service:
+    name: systemd-resolved
+    state: restarted

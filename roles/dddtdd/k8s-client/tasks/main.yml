@@ -1,0 +1,17 @@
+---
+- name: Create kube config dir for current/ansible become user
+  file:
+    path: "{{ ansible_env.HOME | default('/root') }}/.kube"
+    mode: "0700"
+    state: directory
+
+- name: Copy prepare-kube-dir script
+  copy:
+    src: "prepare-kube-dir.sh"
+    dest: "{{ bin_dir }}/prepare-kube-dir.sh"
+    mode: 0700
+
+- name: Run prepare-kube-dir.sh
+  shell: "{{ bin_dir }}/prepare-kube-dir.sh"
+  args:
+    executable: /bin/bash

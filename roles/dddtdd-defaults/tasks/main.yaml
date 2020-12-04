@@ -1,0 +1,15 @@
+---
+- name: Configure defaults
+  debug:
+    msg: "Check roles/dddtdd-defaults/defaults/main.yml"
+  tags:
+    - always
+
+# do not run gather facts when bootstrap-os in roles
+- name: set fallback_ips
+  import_tasks: fallback_ips.yml
+  when:
+    - "'bootstrap-os' not in ansible_play_role_names"
+    - fallback_ips is not defined
+  tags:
+    - always

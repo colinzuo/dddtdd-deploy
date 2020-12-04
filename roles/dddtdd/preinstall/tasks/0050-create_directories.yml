@@ -1,0 +1,12 @@
+---
+- name: Create other directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+  when: inventory_hostname in groups['dddtdd-node']
+  become: true
+  tags:
+    - bootstrap-os
+  with_items:
+    - "{{ bin_dir }}"

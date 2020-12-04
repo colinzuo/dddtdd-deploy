@@ -1,0 +1,12 @@
+version: '3.1'
+
+services:
+  image-debug:
+    image: mongo:4.2
+    volumes:
+    - /home/colinzuo:/colinzuo
+    command:
+      - /bin/bash
+      - -c
+      - |
+        sleep 10000

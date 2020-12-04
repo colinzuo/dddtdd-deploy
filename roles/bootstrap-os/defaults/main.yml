@@ -1,0 +1,6 @@
+---
+## General
+# Set the hostname to inventory_hostname
+override_system_hostname: true
+
+skip_http_proxy_on_os_packages: false

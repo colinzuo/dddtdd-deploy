@@ -1,0 +1,30 @@
+---
+# Set to true to allow pre-checks to fail and continue deployment
+ignore_assert_errors: false
+
+common_required_pkgs:
+  - "{{ (ansible_distribution == 'openSUSE Tumbleweed') | ternary('openssl-1_1', 'openssl') }}"
+  - curl
+  - rsync
+  - unzip
+
+# All inventory hostnames will be written into each /etc/hosts file.
+populate_inventory_to_hosts_file: true
+
+sysctl_file_path: "/etc/sysctl.d/99-sysctl.conf"
+
+etc_hosts_localhost_entries:
+  127.0.0.1:
+    expected:
+      - localhost
+      - localhost.localdomain
+  ::1:
+    expected:
+      - localhost6
+      - localhost6.localdomain
+    unexpected:
+      - localhost
+      - localhost.localdomain
+
+# number of times package install task should be retried
+pkg_install_retries: 4
