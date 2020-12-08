@@ -3,7 +3,6 @@
   command: /bin/true
   notify:
     - Docker | reload systemd
-    - Docker | reload docker.socket
     - Docker | reload docker
     - Docker | wait for docker
 
